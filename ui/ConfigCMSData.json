@@ -1,0 +1,21 @@
+{
+  "SourceFilePath": "C:\\trycms\\Batch1\\CMS_files",
+  "OutputSourceFilepath": "C:\\trycms\\Batch1\\Output_files",
+  "CreateFilesFromDate": "2019-01-20T10:31:43",
+  "CreateFilesFromDatess": "2020-01-20T10:31:43",
+  "NoOfComponentCreate":"1",
+  "NumberOfFiles": "10",
+  "NumberOfSequenceFiles": "10",
+
+
+  "NumberOfFile": {
+    "NumberOfRandomFiles": "1",
+    "NumberOfFilesNullItemURI":"1",
+    "NumberOfSequencesFiles": "1",
+    "NumberOfUpdatedFiles": "5",
+    "NumberOfMissingCMSFiles": "1",
+    "NumberOfMissingOutputFiles": "1",
+    "NumberOf0kbFiles": "1",
+    "CreateFilesFromDates": "2020-01-20T10:31:43"
+  }
+}

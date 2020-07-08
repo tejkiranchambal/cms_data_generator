@@ -1,0 +1,17 @@
+configuration:
+  SourceFilePath: C:\trycms\Batch1\CMS_files
+  OutputSourceFilepath : C:\\trycms\\Batch1\\Output_files
+  CreateFilesFromDate : 2019-01-20T10:31:43
+  CreateFilesFromDatess : 2020-01-20T10:31:43
+  NoOfComponentCreate : 10
+  NumberOfFiles : 20
+  NumberOfSequenceFiles : 10
+
+  NumberOfFile:
+   NumberOfRandomFiles: 10
+   NumberOfFilesNullItemURI: 10
+   NumberOfSequencesFiles: 10
+   NumberOfMissingCMSFiles: 10
+   NumberOfMissingOutputFiles: 10
+   NumberOf0kbFiles: 10
+   CreateFilesFromDates: 10

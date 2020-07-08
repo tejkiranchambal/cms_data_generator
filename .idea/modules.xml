@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/orion2.iml" filepath="$PROJECT_DIR$/orion2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/assembly/orion2-assembly.iml" filepath="$PROJECT_DIR$/assembly/orion2-assembly.iml" />
+      <module fileurl="file://$PROJECT_DIR$/core/orion2-core.iml" filepath="$PROJECT_DIR$/core/orion2-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ui/orion2-ui.iml" filepath="$PROJECT_DIR$/ui/orion2-ui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/worker/orion2-worker.iml" filepath="$PROJECT_DIR$/worker/orion2-worker.iml" />
+    </modules>
+  </component>
+</project>

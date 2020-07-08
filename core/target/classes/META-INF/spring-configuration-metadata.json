@@ -1,0 +1,59 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "org.openskye.Config.ConfigurationProperty",
+      "name": "configuration",
+      "type": "org.openskye.Config.ConfigurationProperty"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "org.openskye.Config.ConfigurationProperty",
+      "defaultValue": "2019-01-20T10:31:43",
+      "name": "configuration.create-files-from-date",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.openskye.Config.ConfigurationProperty",
+      "defaultValue": "2020-01-20T10:31:43",
+      "name": "configuration.create-files-from-datess",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.openskye.Config.ConfigurationProperty",
+      "defaultValue": 10,
+      "name": "configuration.no-of-component-create",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "org.openskye.Config.ConfigurationProperty",
+      "name": "configuration.number-of-file",
+      "type": "java.util.List<java.lang.String>"
+    },
+    {
+      "sourceType": "org.openskye.Config.ConfigurationProperty",
+      "defaultValue": 10,
+      "name": "configuration.number-of-files",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "org.openskye.Config.ConfigurationProperty",
+      "defaultValue": 10,
+      "name": "configuration.number-of-sequence-files",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "org.openskye.Config.ConfigurationProperty",
+      "defaultValue": "C:\\trycms\\Batch1\\Output_files",
+      "name": "configuration.output-source-filepath",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.openskye.Config.ConfigurationProperty",
+      "defaultValue": "C:\\trycms\\Batch1\\CMS_files",
+      "name": "configuration.source-file-path",
+      "type": "java.lang.String"
+    }
+  ]
+}

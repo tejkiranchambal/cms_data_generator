@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.infobelt:orion2-core:3.1.0.b05-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/infobelt/orion2-core/3.1.0.b05-SNAPSHOT/orion2-core-3.1.0.b05-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/infobelt/orion2-core/3.1.0.b05-SNAPSHOT/orion2-core-3.1.0.b05-SNAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/infobelt/orion2-core/3.1.0.b05-SNAPSHOT/orion2-core-3.1.0.b05-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
