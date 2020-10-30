@@ -8,11 +8,13 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 import static org.openskye.TemplateJsonWriter.*;
+import static org.openskye.TemplateJsonWriter.createVideosComponentFiles;
 import static org.openskye.TemplateJsonWriter.setitemUriNull;
 import static org.openskye.Utility.*;
 
@@ -21,10 +23,11 @@ import static org.openskye.Utility.*;
 public class TemplateJsonReader {
     @Getter
     @Setter
-    public File SOURCE_JSON_FILE;
+    public static File SOURCE_JSON_FILE;
     @Getter
     @Setter
     public File DESTINATION_JSON_FILE;
+    Map<String, Integer> mapOfRepeatedWordVersion = new HashMap<String, Integer>();
     public static String CmsGetName;
     public static String CmsVersion;
     public static String CmsCreatedDateTimes;
@@ -39,6 +42,13 @@ public class TemplateJsonReader {
     public static String BundleName;
     public static String BundleApprovalId;
     public static File file;
+    public static String COMPONENTID;
+    public static String VERSION;
+    public static String tcmid;
+    public static String readComponent;
+    public static File MultimediaFile ;
+//    public static ArrayList<String> ComponentStatisticsCount;
+  //  public static JSONArray NewJsonArray ;
 
     public JsonFileTemplate getSourceFromInputFile() throws IOException, ParseException, JSONException, java.text.ParseException {
 
@@ -62,7 +72,11 @@ public class TemplateJsonReader {
         if (page.equalsIgnoreCase(String.valueOf(64))) {
             String tcmid = TCMID + "-" + page + "-" + "v" + CmsVersion;
             multimediaJsonObject.put("Id", tcmid);
-        } else {
+        } else if((operator) == 'A' || (operator) == 'B' || (operator) == 'C' || (operator) == 'D' || (operator) == 'E' ) {
+            String tcmid = TCMID + "-" + "16" + "-" + "v" + getVersionForComponentFile();
+            multimediaJsonObject.put("Id", tcmid);
+        }
+        else {
             String tcmid = TCMID + "-" + "v" + CmsVersion;
             multimediaJsonObject.put("Id", tcmid);
         }
@@ -84,20 +98,33 @@ public class TemplateJsonReader {
         innerJsonObject.put("Location", CmsLocation());
 
         if (page.equalsIgnoreCase(String.valueOf(64))) {
-            if ((operator) == '9') {
-                innerJsonObject.put("ItemUri", setitemUriNull);
-            } else {
+            if ((operator) == '9' || (operator) == '7' && directory.contains("batch7")) {
+                innerJsonObject.remove("ItemUri");
+            }
+         else {
                 innerJsonObject.put("ItemUri", setitemUri(DESTINATION_JSON_FILE.getName()) + "-" + page);
             }
-        } else {
-            if ((operator) == '9') {
-                innerJsonObject.put("ItemUri", setitemUriNull);
-            } else {
+        }
+        else {
+              if((operator) == 'A' || (operator) == 'B' || (operator) == 'C' || (operator) == 'D' || (operator) == 'E' ) {
+                innerJsonObject.put("ItemUri", getItemUriForComponentFile());
+
+            }
+              else if ((operator) == '9' || directory.contains("batch7")) {
+                innerJsonObject.remove("ItemUri");
+            }
+
+            else {
                 innerJsonObject.put("ItemUri", setitemUri(DESTINATION_JSON_FILE.getName()));
             }
         }
 
-        innerJsonObject.put("Version", CmsVersion);
+        if((operator) == 'A' || (operator) == 'B' || (operator) == 'C' || (operator) == 'D' || (operator) == 'E' ) {
+            innerJsonObject.put("Version", getVersionForComponentFile());
+        }
+        else {
+            innerJsonObject.put("Version", CmsVersion);
+        }
         if (CreateFilesFromDate.equals("")) {
             innerJsonObject.put("CreatedDateTime", createCmsFile_CurrentDate());
         } else {
@@ -146,13 +173,13 @@ public class TemplateJsonReader {
                     ComponentPresentations cp = new ComponentPresentations();
                     ArrayList<String> list = new ArrayList<String>();
                     JSONArray cmpJsonArry = new JSONArray();
-                    for (int i = 1; i <= componentJsonArray.length(); i++) {
-
-                        String ItemUri = setcomponent();
-                        ComponentVersion = CmsVersion();
-                        ComponentId = ItemUri + "-" + "v" + ComponentVersion;
-                        ComponentLocation = CmsLocation();
-                        ComponentName = CmsGetName();
+                    for (int i = 0; i < componentJsonArray.length(); i++) {
+                        if (page.equalsIgnoreCase(String.valueOf(64))) {
+                            String ItemUri = setcomponent();
+                            ComponentVersion = CmsVersion();
+                            ComponentId = ItemUri + "-" + "v" + ComponentVersion;
+                            ComponentLocation = CmsLocation();
+                            ComponentName = CmsGetName();
 
                         JSONObject componentJsonObject = componentJsonArray.getJSONObject(i);
                         JSONObject compoJson = componentJsonObject.getJSONObject("Component");
@@ -169,7 +196,48 @@ public class TemplateJsonReader {
                             systemMetadataJson.put("ItemUri", ItemUri);
                         }
                         systemMetadataJson.put("Version", ComponentVersion);
-                        systemMetadataJson.put("Location", ComponentLocation);
+                            if ((operator) == '0' && page.equalsIgnoreCase(String.valueOf(64))) {
+
+                                if (compoJson.get("Schema").equals("Video")) {
+                                    MultimediaFile = new File("./MultimediaFiles/Videos.txt");
+                                }
+                                if (compoJson.get("Schema").equals("Image")) {
+                                    MultimediaFile = new File("./MultimediaFiles/Image.txt");
+                                }
+                                if (compoJson.get("Schema").equals("PDF")) {
+                                    MultimediaFile = new File("./MultimediaFiles/Pdf.txt");
+                                }
+                                if (compoJson.get("Schema").equals("Audio")) {
+                                    MultimediaFile = new File("./MultimediaFiles/Audio.txt");
+                                }
+                                if (compoJson.get("Schema").equals("Video") || compoJson.get("Schema").equals("Image") || compoJson.get("Schema").equals("PDF") || compoJson.get("Schema").equals("Audio") ) {
+                                    COMPONENTID = getPagePrefix();
+                                    VERSION = ComponentVersion;
+                                    tcmid = COMPONENTID + VERSION;
+                                    PrintWriter out = new PrintWriter(new FileWriter(MultimediaFile, true));
+                                    out.println(tcmid);
+                                    out.flush();
+                                    out.close();
+                                }
+                            }
+
+
+//                                    File akshara = new File("akshita.txt");
+//                                    akshara.createNewFile();
+//                                    FileWriter fw = new FileWriter(akshara, true);
+//
+//                                    fw.write("\n" + tcmid + "\t\t" + "Count");
+
+
+
+                                 /*   if (componentJsonObject.getJSONObject("Component").get("Content").toString().contains("img xlink:href"))
+                                        ;
+                                    jsonString.contains("img xlink:href");
+                                    //("<img xlink:href=" + ComponentId + ">" + ComponentId + "</img");
+                                    compoJson.put("Content", ComponentName);*/
+
+
+                            systemMetadataJson.put("Location", ComponentLocation);
 
 
                         componentJsonObject.put("Component", compoJson);
@@ -177,12 +245,8 @@ public class TemplateJsonReader {
 
                         if (i == Integer.parseInt(NoOfComponentCreate)) {
                             cmpJsonArry.put(componentJsonObject);
-
-                        } else {
-                            componentJsonObject.remove("Component");
-                            componentJsonObject.remove("ComponentTemplate");
-
-
+                            cp.getJsonArray().add(cmpJsonArry);
+                         //   NewJsonArray = cmpJsonArry;
                         }
                         cp.getJsonArray().add(cmpJsonArry);
                     }
@@ -200,7 +264,38 @@ public class TemplateJsonReader {
 
     static File getRandomCmsSourceFile() {
         Random rand = new Random();
-        File[] files = new File(TemplateJsonWriter.SourcePaths).listFiles();
+        File[] files;
+        if( (operator) == '0'){
+            files = new File(TemplateJsonWriter.PageMultimediaSourcePath).listFiles();
+        }
+        else if((operator) == 'A'){
+            files = new File(TemplateJsonWriter.MultimediaSourcePath).listFiles();
+        }
+        else if((operator) == 'B'){
+            files = new File(TemplateJsonWriter.ImageSourcePaths).listFiles();
+        }
+        else if((operator) == 'C'){
+            files = new File(TemplateJsonWriter.PdfSourcePaths).listFiles();
+        }
+        else if((operator) == 'D'){
+            files = new File(TemplateJsonWriter.AudioSourcePaths).listFiles();
+        }
+        else if((operator) == 'E'){
+            files = new File(TemplateJsonWriter.VideoSourcePaths).listFiles();
+        }
+        else {
+            files = new File(TemplateJsonWriter.SourcePaths).listFiles();
+        }
+        file = files[rand.nextInt(files.length)];
+
+             return file;
+    }
+
+
+
+    static File getRandomCmsSourceFileForImage() {
+        Random rand = new Random();
+        File[] files = new File(TemplateJsonWriter.ImageSourcePaths).listFiles();
         file = files[rand.nextInt(files.length)];
         return file;
     }
@@ -211,4 +306,30 @@ public class TemplateJsonReader {
         File file = files[rand.nextInt(files.length)];
         return file;
     }
+    public static String fileToString(String filePath) throws Exception{
+        String input = null;
+        Scanner sc = new Scanner(new File(filePath));
+        StringBuffer sb = new StringBuffer();
+        while (sc.hasNextLine()) {
+            input = sc.nextLine();
+            sb.append(input);
+        }
+        return sb.toString();
+    }
+    public static String checkComponentFiles() throws IOException, ParseException, JSONException {
+        JsonFileTemplate jsonFileTemplate = new JsonFileTemplate(SOURCE_JSON_FILE);
+        JSONObject multimediaJsonObject = jsonFileTemplate.getJsonObject();
+        String s;
+        if (multimediaJsonObject.get("MultimediaType").equals("Video")) {
+            s = createVideosComponentFiles();
+        } else if (multimediaJsonObject.get("MultimediaType").equals("Image")) {
+            s = createImageComponentFiles();
+        } else if (multimediaJsonObject.get("MultimediaType").equals("Pdf document")){
+            s = createPdfComponentFiles();
+        } else {
+            s = createAudioComponentFiles();
+        }
+        return s;
+    }
+
 }

@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import static org.openskye.TemplateJsonReader.*;
 import static org.openskye.TemplateJsonWriter.*;
 import static org.openskye.Utility.sequence;
 
@@ -26,6 +27,7 @@ class Utility {
     public static String three;
     public static String four;
     public static String sequence;
+    public static String s;
 
     public static String cmsFileName() throws java.text.ParseException, IOException, ParseException, JSONException {
         File sf = templateJsonReader.getSOURCE_JSON_FILE();
@@ -42,6 +44,44 @@ class Utility {
         String originalSequence = sequence;
         System.out.println(originalTcmId);*/
         FileNameCms = (cmsTcmId(FileNames)  + "_" + callDateMethod(DateOperator) + "_" + sequence + ".");
+        return FileNameCms;
+    }
+
+    public static String componentCmsFileName() throws java.text.ParseException, IOException, ParseException, JSONException {
+
+        if((operator) == 'A' )
+        {
+            s = createAllFiles();
+        }
+        else if  ( (operator) == 'B'  ) {
+            s =   createImageComponentFiles();
+
+        }
+        else if  ( (operator) == 'C'  )
+        {
+            s =    createPdfComponentFiles();
+        }
+        else
+        {
+            s =     createAudioComponentFiles();
+        }
+        if((operator) == 'E' )
+        {
+            s =   createVideosComponentFiles();
+        }
+        File sf = new File(s);
+        final String tcm = "tcm";
+        String str = sf.getName();
+        String array[] = str.split("[ :-]+");
+        sequence = array[3];
+        sequence = createRandomNumberGenerate(100000, 999999);
+        page = "16";
+        String FileNameCms;
+        /*String originalTcmId = tcmId;
+        String originalPublistDateTime = publishDateTime;
+        String originalSequence = sequence;
+        System.out.println(originalTcmId);*/
+        FileNameCms = ( array[0] + "-" + array[1] + "-" + array[2] + "-" + page + "_"+ callDateMethod(DateOperator) + "_" + sequence + ".");
         return FileNameCms;
     }
 
@@ -70,7 +110,38 @@ class Utility {
 
     }
 
+    public static String getComponentSuffix() throws java.text.ParseException, IOException {
 
+        String array[] = ComponentId.split("[-]+");
+        String threes = array[1];
+        return (threes);
+
+    }
+
+    public static String getPagePrefix() throws java.text.ParseException, IOException {
+
+        String array[] = TCMID.split("[-]+");
+        return (array[0] + "-" + array[1] + "-" + getComponentSuffix() + "-");
+
+    }
+
+    public static String getVersionForComponentFile() throws java.text.ParseException, IOException {
+
+        String array[] = s.split("[-]+");
+        String Version = array[3];
+        return (Version);
+
+    }
+
+    public static String getItemUriForComponentFile() throws java.text.ParseException, IOException {
+
+        String array[] = s.split("[:-]+");
+        String tcm = array[0];
+        String threes = array[1];
+        String four = array[2];
+        return (tcm + "-" + threes + "-" + four);
+
+    }
 
     public static String createRandomNumberGenerate(int minRange, int maxRange) throws java.text.ParseException, IOException {
 
@@ -97,14 +168,11 @@ class Utility {
 
     public static String setitemUri(String FileNames) {
         String ItemUri;
-        String array[] = FileNames.split("[- _.]+");
+        String array[] = FileNames.split("[ :-]+");
         String tcm = array[0];
         String three = array[1];
         String four = array[2];
-        page = array[3];
-        String date = array[4];
-        String sequence = array[5];
-        ItemUri = ("tcm:" + three + "-" + four);
+        ItemUri = (tcm+ "-" + three + "-" + four);
         return ItemUri;
     }
 

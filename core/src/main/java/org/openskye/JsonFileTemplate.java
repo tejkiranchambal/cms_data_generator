@@ -80,6 +80,15 @@ public class JsonFileTemplate {
 
     }
 
+    public String getMultimediaType() throws JSONException {
+        return (String) jsonObject.get("MultimediaType");
+    }
+
+    public void setMultimediaType(String MultimediaType) throws JSONException {
+        this.jsonObject.put("MultimediaType", MultimediaType);
+
+    }
+
     public String getName() throws JSONException {
         return (String) jsonObject.get("Name");
 

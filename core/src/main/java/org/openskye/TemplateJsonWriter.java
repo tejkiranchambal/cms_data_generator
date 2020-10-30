@@ -35,12 +35,24 @@ public class TemplateJsonWriter implements StatisticFiles {
     static String jsonString = null;
     public static JSONObject jo = null;
     public static String SourcePaths = null;
+    public static String MultimediaSourcePath = null;
+    public static String MultimediaOutputSrcFile = null;
+    public static String PageMultimediaSourcePath = null;
+    public static String PageMultimediaOutputSrcFile = null;
+    public static String VideoSourcePaths = null;
+    public static String VideoOutputSrcFile = null;
+    public static String AudioSourcePaths = null;
+    public static String AudioOutputSrcFile = null;
+    public static String PdfSourcePaths = null;
+    public static String PdfOutputSrcFile = null;
+    public static String ImageSourcePaths = null;
     private static String NumberOfFiles = null;
     private static String NumberOfFile = null;
     private static String NumberOfSequenceFiles = null;
     public static String CreateFilesFromDate = null;
     public static String CreateFilesFromDatess = null;
     private static String OutputSrcFile = null;
+    private static String ImageOutputSrcFile = null;
     private static String NumberOfRandomFiles = null;
     public static String CreateFilesFromDates = null;
     private static String NumberOfSequencesFiles = null;
@@ -57,7 +69,8 @@ public class TemplateJsonWriter implements StatisticFiles {
     private static String Cms_Type = null;
     static String duplicate = null;
     static String FileNameCms = null;
-    public static String page;
+    public static String page ;
+    public static String directory;
     public static char operator;
     public static char batch;
     public static char batchName;
@@ -79,6 +92,8 @@ public class TemplateJsonWriter implements StatisticFiles {
     Map<String, Integer> mapOfRepeatedWordTcmId = new HashMap<String, Integer>();
     Map<String, Integer> mapOfRepeatedWordVersion = new HashMap<String, Integer>();
     Map<String, Integer> mapOfRepeatedWordLocation = new HashMap<String, Integer>();
+    Map<String, Integer> mapOfRepeatedComponentName = new HashMap<String, Integer>();
+    Map<String, Integer> mapOfRepeatedComponentVersion = new HashMap<String, Integer>();
 
 
     public TemplateJsonWriter() throws IOException, ParseException, JSONException, java.text.ParseException {
@@ -86,10 +101,22 @@ public class TemplateJsonWriter implements StatisticFiles {
         jsonString = parseJSONFile(new File("ui\\ConfigCMSData.json"), "UTF-8");
         jo = (new org.codehaus.jettison.json.JSONObject(jsonString));
         SourcePaths = (String) jo.get("SourceFilePath");
+        ImageSourcePaths = (String) jo.get("SourceFilePathForImage");
+        MultimediaSourcePath = (String) jo.get("SourceFilePathForMultimedia");
+        MultimediaOutputSrcFile = (String) jo.get("OutputSourceFilepathForMultimedia");
+        PageMultimediaOutputSrcFile = (String) jo.get("OutputSourceFilepathForPageMultimedia");
+        PageMultimediaSourcePath = (String) jo.get("SourceFilePathForPageMultimedia");
+        VideoSourcePaths = (String) jo.get("SourceFilePathForVideo");
+        AudioSourcePaths = (String) jo.get("SourceFilePathForAudio");
+        PdfSourcePaths = (String) jo.get("SourceFilePathForPdf");
+        VideoOutputSrcFile = (String) jo.get("OutputSourceFilepathForVideo");
+        AudioOutputSrcFile = (String) jo.get("OutputSourceFilepathForAudio");
+        PdfOutputSrcFile = (String) jo.get("OutputSourceFilepathForPdf");
         NumberOfFiles = (String) jo.get("NumberOfFiles");
         NumberOfSequenceFiles = (String) jo.get("NumberOfSequenceFiles");
         NoOfComponentCreate = (String) jo.get("NoOfComponentCreate");
         OutputSrcFile = (String) jo.get("OutputSourceFilepath");
+        ImageOutputSrcFile = (String) jo.get("OutputSourceFilepathForImage");
         JSONObject NOF = (JSONObject) jo.get("NumberOfFile");
         NumberOfRandomFiles = (String) NOF.get("NumberOfRandomFiles");
         NumberOfFilesNullItemURI = (String) NOF.get("NumberOfFilesNullItemURI");
@@ -108,26 +135,47 @@ public class TemplateJsonWriter implements StatisticFiles {
         createFile();
         createFileFromDate();
 
-        File name = new File(STATISTIC_NAME_COUNT + ".txt");
+        File name = new File("Statistic_NameCount.txt");
         FileWriter fr = null;
         fr = new FileWriter(name.getAbsoluteFile(), true);
 
-        File version = new File(STATISTIC_VERSION_COUNT + ".txt");
+        File version = new File("Statistic_VersionCount.txt");
         FileWriter frVersion = null;
         frVersion = new FileWriter(version.getAbsoluteFile(), true);
 
-        File Location = new File(STATISTIC_LOCATION_COUNT + ".txt");
+        File Location = new File("Statistic_LocationCount.txt");
         FileWriter frLocation = null;
         frLocation = new FileWriter(Location.getAbsoluteFile(), true);
 
-        File TcmId = new File(STATISTIC_TCMID_COUNT + ".txt");
+        File TcmId = new File("StatisticTcmId.txt");
         TcmId.createNewFile();
         FileWriter frtcmid = null;
         frtcmid = new FileWriter(TcmId.getAbsoluteFile(), true);
 
+        File CmpName = new File("Statistics.txt");
+        CmpName.createNewFile();
+        FileWriter frcmp_name = null;
+        frcmp_name = new FileWriter(CmpName.getAbsoluteFile(), true);
+
+
+        File akshara = new File("akshara.txt");
+        akshara.createNewFile();
+        FileWriter frtcmid1 = null;
+        frtcmid1 = new FileWriter(akshara.getAbsoluteFile(), true);
+
+        File componentVersionStatistics = new File("componentVersionStatistics.txt");
+        componentVersionStatistics.createNewFile();
+        FileWriter cmpVerSta = null;
+        cmpVerSta = new FileWriter(akshara.getAbsoluteFile(), true);
+
         fr.write("\n" + "Words in Name" + "\t\t" + "Count");
+        fr.write("\n" + createCmsFile_CurrentDate());
         frVersion.write("\n" + "Version" + "\t\t" + "Count");
         frLocation.write("\n" + "Location" + "\t\t" + "Count");
+        frtcmid.write("\n" + "Tcmid" + "\t\t" + "Count");
+        frcmp_name.write("Field" + "\t\t" + "Count");
+        frtcmid1.write("Field" + "\t\t" + "Count");
+        cmpVerSta.write("Field" + "\t\t" + "Count");
 
         for (i = 1; i <= Integer.parseInt(NumberOfFiles); i++) {
 
@@ -138,7 +186,7 @@ public class TemplateJsonWriter implements StatisticFiles {
                 createCmsFile();
 
                 templateJsonReader.setDESTINATION_JSON_FILE(file);
-                JsonFileTemplate jsonFileTemplate = templateJsonReader.getSourceFromInputFile();
+                //JsonFileTemplate jsonFileTemplate = templateJsonReader.getSourceFromInputFile();
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
@@ -146,6 +194,9 @@ public class TemplateJsonWriter implements StatisticFiles {
                 }
                 writeCmsFile();
                 createOutputFile();
+                if ((operator) == '3' || (operator) == '7' || (operator) == '8') {
+                    break;
+                }
 
             } catch (Exception ex) {
                 continue;
@@ -186,54 +237,23 @@ public class TemplateJsonWriter implements StatisticFiles {
         return true;
     }*/
 
-    private static File updatedFiles() throws JSONException, java.text.ParseException, ParseException, IOException {
+    public static ArrayList<String> getComponentversion() throws IOException, ParseException, JSONException {
+        JSONObject jsonobject = null;
+        JSONObject compoJson = null;
+        Object cmp_name = null;
+        String s = null;
 
-
-        String directory = "batch";
-
-
-        File fileName;
-        dir = new File(batchPath + getBatch() + "\\" + getBatchName() + "\\" + directory +"\\" );
-        File[] directories = new File(FolderFromBatch7).listFiles(new FileFilter() {
-
-            @Override
-            public boolean accept(File file) {
-                return file.isDirectory();
-            }
-        });
-
-
-        if (file.isDirectory()) {
-            String Directory1 = ((directory + 1));
-            fileName = new File(batchPath + getBatch() + "\\" + getBatchName() + "\\" + Directory1 +"\\" +"Cms_files" +"\\");
-            fileName.mkdirs();
-        } else {
-             fileName = new File(batchPath + getBatch() + "\\" + getBatchName() + "\\" + directory + "\\" + "Cms_files" + "\\");
-
-            fileName.mkdirs();
+        ArrayList<String> list = new ArrayList<String>();
+        for (int j = 0; j < NewJsonArray.length(); j++) {
+            jsonobject = NewJsonArray.getJSONObject(j);
+            compoJson = jsonobject.getJSONObject("Component");
+            compoJson.get("Version");
+            cmp_name = compoJson.get("Version");
+            s = cmp_name.toString();
+            list.add(s);
         }
-
-
-        return fileName;
-    }
-
-    private static File updatedFilesForOutput() throws JSONException, java.text.ParseException, ParseException, IOException {
-        File fileName;
-        String directory = "batch";
-
-
-            fileName = new File(dir +"\\" +"Output_files" +"\\");
-
-            fileName.mkdirs();
-
-        return fileName;
-    }
-
-
-
-
-
-
+        return (list);
+    }*/
 
     public static String getExtensionForCmsFile() {
         File sf = templateJsonReader.getSOURCE_JSON_FILE();
@@ -253,10 +273,11 @@ public class TemplateJsonWriter implements StatisticFiles {
     }
 
     public static void createOutputFile() throws JSONException, java.text.ParseException, ParseException, IOException {
-        File random_OutputFile = getRandomOutputSourceFile();
-        File OutputSourceFile = new File(OutputSrcFile + random_OutputFile);
+            random_OutputFile = getRandomOutputSourceFile();
+            OutputSourceFile = new File(String.valueOf(random_OutputFile));
 
-        if ((operator) == '1'  || (operator) == '4' || (operator) == '9') {
+
+        if ((operator) == '1'  || (operator) == '4' || (operator) == '9'  || (operator) == '0' || (operator) == 'A'  || (operator) == 'B' || (operator) == 'C'   || (operator) == 'D' || (operator) == 'E') {
             OutputDestFile = new File(createOutputFilePath() + "\\" + FileNameCms + getExtensionForOutputFile(OutputSourceFile));
         }
 
@@ -282,19 +303,19 @@ public class TemplateJsonWriter implements StatisticFiles {
         File random_OutputFile = getRandomOutputSourceFile();
         String FileNames = getCmsFileName();
         String Cms_File_Name = FileNames + getExtensionForCmsFile();
-        if ((operator) == '1' || (operator) == '5' || (operator) == '6' || (operator) == '9') {
+        if ((operator) == '1' || (operator) == '5' || (operator) == '6' || (operator) == '9' || (operator) == '0' || (operator) == 'A'  || (operator) == 'B'  || (operator) == 'C'  || (operator) == 'D' || (operator) == 'E') {
             file = new File(createCmsFilePath() + "\\" + Cms_File_Name);
         }
         else if( (operator) == '3') {
 
             for (int i = 1; i <= 10; i++) {
                 String directory = "batch" + i;
-                dirCms = new File(createCmsFilePath_ForBatch7() + "\\" + directory + "\\" + "Cms_files");
+                dirCms = new File(createCmsFilePath_ForBatch3() + "\\" + directory + "\\" + "Cms_files");
                 dirCms.mkdirs();
 
                 file = new File(dirCms + "\\"  + FileNames);
                 writeCmsFile();
-                dirOutput = new File(createCmsFilePath_ForBatch7() + "\\" + directory + "\\" + "Output_files");
+                dirOutput = new File(createCmsFilePath_ForBatch3() + "\\" + directory + "\\" + "Output_files");
                 dirOutput.mkdirs();
                 fullOutputFileName();
                     OutputDestFile = new File(dirOutput + "\\" +FileNameCms + getExtensionForOutputFile(OutputSourceFile));
@@ -308,16 +329,23 @@ public class TemplateJsonWriter implements StatisticFiles {
         }
         else if ((operator) == '7' || (operator) == '8') {
             for (int i = 1; i <= 7; i++) {
-                String directory = "batch" + i;
-                dirCms = new File(createCmsFilePath_ForBatch7() + "\\" + directory + "\\" + "Cms_files");
-                dirCms.mkdirs();
-                dirOutput = new File(createCmsFilePath_ForBatch7() + "\\" + directory + "\\" + "Output_files");
-                dirOutput.mkdirs();
-                if ((operator) == '1' || (operator) == '7' || (operator) == '8') {
-                    for (int j = 0; j < Integer.parseInt(NumberOfRandomFiles); j++) {
-                        String CmsFile_Name = CmsFileNames();
-                        String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
-                        if ((operator) == '7')
+                 directory = "batch" + i;
+                File dirCmsForBatch3 =  new File(createCmsFilePath_ForBatch3() + "\\" + directory + "\\" );
+               if(directory.contains("batch3") == false) {
+                   dirCms = new File(dirCmsForBatch3 + "\\" + "Cms_files");
+                   dirCms.mkdirs();
+               }
+                File dirOutputForBatch3 = new File(createCmsFilePath_ForBatch3() + "\\" + directory + "\\" );
+                if(directory.contains("batch3") == false) {
+                    dirOutput = new File(dirOutputForBatch3 + "\\" + "Output_files");
+                    dirOutput.mkdirs();
+                }
+                if (directory.contains("batch1")) {
+                    if ((operator) == '1' || (operator) == '7' || (operator) == '8') {
+                        for (int j = 0; j < Integer.parseInt(NumberOfRandomFiles); j++) {
+                            String CmsFile_Name = CmsFileNames();
+                            String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
+                            if ((operator) == '7')
 
                         {
                             file = new File(dirCms + "\\" + FullCmsFileName);
@@ -340,92 +368,98 @@ public class TemplateJsonWriter implements StatisticFiles {
 
                         OutputDestFile.createNewFile();
                         FileUtils.copyFile(random_OutputFile, OutputDestFile);
-                    }
-                }
-                directory = "batch" + i;
-                dirCms = new File(createCmsFilePath_ForBatch7() + "\\" + directory + "\\" + "Cms_files");
-                dirCms.mkdirs();
-                dirOutput = new File(createCmsFilePath_ForBatch7() + "\\" + directory + "\\" + "Output_files");
-                dirOutput.mkdirs();
-                if ((operator) == '2' || (operator) == '7' || (operator) == '8') {
-                    for (int j = 0; j < Integer.parseInt(NumberOfSequencesFiles); j++) {
-                        String CmsFile_Name = Cms_FileName_Sequence();
-                        String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
-                        if ((operator) == '7') {
-                            file = new File(dirCms + "\\" + FullCmsFileName);
-
-                        } else {
-                            file = new File(createCmsFilePath() + "\\" + FullCmsFileName);
                         }
-                        writeCmsFile();
-                        fullOutputFileName();
-                        if ((operator) == '7') {
-                            OutputDestFile = new File(dirOutput + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
-
-                        } else {
-                            OutputDestFile = new File(createOutputFilePath() + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
-                        }
-                        OutputDestFile.createNewFile();
-                        FileUtils.copyFile(random_OutputFile, OutputDestFile);
-                    }
-                }
-                directory = "batch" + i;
-                dirCms = new File(createCmsFilePath_ForBatch7() + "\\" + directory + "\\" + "Cms_files");
-                dirCms.mkdirs();
-                dirOutput = new File(createCmsFilePath_ForBatch7() + "\\" + directory + "\\" + "Output_files");
-                dirOutput.mkdirs();
-                if ((operator) == '3' || (operator) == '7' || (operator) == '8') {
-
-                    for (int j = 0; j < Integer.parseInt(NumberOfUpdatedFiles); j++) {
-                        String CmsFile_Name = getCmsFileNameForOverrideFiles();
-                        String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
-                        if ((operator) == '7') {
-                            file = new File(dirCms + "\\" + FullCmsFileName);
-
-                        } else {
-                            file = new File(createCmsFilePath() + "\\" + FullCmsFileName);
-                        }
-                        writeCmsFile();
-                        fullOutputFileName();
-                        if ((operator) == '7') {
-                            OutputDestFile = new File(dirOutput + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
-
-                        } else {
-                            OutputDestFile = new File(createOutputFilePath() + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
-                        }
-
-                        OutputDestFile.createNewFile();
-                        FileUtils.copyFile(random_OutputFile, OutputDestFile);
                     }
                 }
 
+                if (directory.contains("batch2")) {
 
-                if ((operator) == '4' || (operator) == '7' || (operator) == '8') {
-                    for (int j = 0; j < Integer.parseInt(NumberOfMissingCMSFiles); j++) {
-                        String CmsFile_Name = CmsFileNames();
-                        String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
-                        fullOutputFileName();
-                        if ((operator) == '7') {
-                            OutputDestFile = new File(dirOutput + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
-
-                        } else {
-                            OutputDestFile = new File(createOutputFilePath() + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
-                        }
-
-                        OutputDestFile.createNewFile();
-                        FileUtils.copyFile(random_OutputFile, OutputDestFile);
-                        block1:
-                        {
-                            if (j >= 4 && j <= 7) {
-                                break block1;
-                            }
+                    if ((operator) == '2' || (operator) == '7' || (operator) == '8') {
+                        for (int j = 0; j < Integer.parseInt(NumberOfSequencesFiles); j++) {
+                            String CmsFile_Name = Cms_FileName_Sequence();
+                            String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
                             if ((operator) == '7') {
                                 file = new File(dirCms + "\\" + FullCmsFileName);
 
+                        } else {
+                            file = new File(createCmsFilePath() + "\\" + FullCmsFileName);
+                        }
+                        writeCmsFile();
+                        fullOutputFileName();
+                        if ((operator) == '7') {
+                            OutputDestFile = new File(dirOutput + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
+
                             } else {
+                                OutputDestFile = new File(createOutputFilePath() + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
+                            }
+                            OutputDestFile.createNewFile();
+                            FileUtils.copyFile(random_OutputFile, OutputDestFile);
+                        }
+                    }
+                }
+                if (directory.contains("batch3")) {
+                    if ((operator) == '3' || (operator) == '7' || (operator) == '8') {
 
+                        for (int j = 1; j <= Integer.parseInt(NumberOfUpdatedFiles); j++) {
+                            String directory1 = "batch" + j;
+                            File dirOverWriteCms = new File(dirCmsForBatch3 + "\\" + directory1 + "\\" + "Cms_files" + "\\");
+                            dirOverWriteCms.mkdirs();
+                            String CmsFile_Name = getCmsFileNameForOverrideFiles();
+                            String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
+                            if ((operator) == '7') {
+                                file = new File(dirOverWriteCms + "\\"  + Cms_File_Name);
 
+                            } else {
                                 file = new File(createCmsFilePath() + "\\" + FullCmsFileName);
+                            }
+                            writeCmsFile();
+                            File dirOverWriteOutput = new File(dirOutputForBatch3 + "\\" + directory1 + "\\" + "Output_files" + "\\");
+                            dirOverWriteOutput.mkdirs();
+                            fullOutputFileName();
+
+                            if ((operator) == '7') {
+                                OutputDestFile = new File(dirOverWriteOutput + "\\" + FileNames + getExtensionForOutputFile(OutputSourceFile));
+
+                        } else {
+                            OutputDestFile = new File(createOutputFilePath() + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
+                        }
+
+                            OutputDestFile.createNewFile();
+                            FileUtils.copyFile(random_OutputFile, OutputDestFile);
+                        }
+                    }
+                }
+                if (directory.contains("batch4")) {
+                    if ((operator) == '4' || (operator) == '7' || (operator) == '8') {
+                        for (int j = 1; j <= Integer.parseInt(NumberOfMissingCMSFiles); j++) {
+                            String CmsFile_Name = CmsFileNames();
+                            String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
+                            fullOutputFileName();
+                            if ((operator) == '7') {
+                                OutputDestFile = new File(dirOutput + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
+
+                        } else {
+                            OutputDestFile = new File(createOutputFilePath() + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
+                        }
+
+                            OutputDestFile.createNewFile();
+                            FileUtils.copyFile(random_OutputFile, OutputDestFile);
+
+                            if ((operator) == '7') {
+                                if (j % 2 == 1) {
+                                    file = new File(dirCms + "\\" + FullCmsFileName);
+                                }
+                                else {
+                                    break;
+                                }
+                            } else {
+                                if (j % 2 == 1) {
+                                    file = new File(createCmsFilePath() + "\\" + FullCmsFileName);
+                                } else {
+                                    break;
+                                }
+
+
                             }
 
                             writeCmsFile();
@@ -434,12 +468,14 @@ public class TemplateJsonWriter implements StatisticFiles {
                     }
                 }
 
-                if ((operator) == '5' || (operator) == '7' || (operator) == '8') {
-                    for (int j = 0; j < Integer.parseInt(NumberOf0kbFiles); j++) {
-                        String CmsFile_Name = CmsFileNames();
-                        String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
-                        if ((operator) == '7') {
-                            file = new File(dirCms + "\\" + FullCmsFileName);
+
+                if (directory.contains("batch5")) {
+                    if ((operator) == '5' || (operator) == '7' || (operator) == '8') {
+                        for (int j = 0; j < Integer.parseInt(NumberOf0kbFiles); j++) {
+                            String CmsFile_Name = CmsFileNames();
+                            String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
+                            if ((operator) == '7') {
+                                file = new File(dirCms + "\\" + FullCmsFileName);
 
                         } else {
                             file = new File(createCmsFilePath() + "\\" + FullCmsFileName);
@@ -457,62 +493,101 @@ public class TemplateJsonWriter implements StatisticFiles {
 
                         OutputDestFile.createNewFile();
 
+                        }
                     }
                 }
+                if (directory.contains("batch6")) {
+                    if ((operator) == '6' || (operator) == '7' || (operator) == '8') {
+                        for (int j = 1; j <= Integer.parseInt(NumberOfMissingOutputFiles); j++) {
+                            String CmsFile_Name = CmsFileNames();
+                            String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
+                            if ((operator) == '7') {
+                                file = new File(dirCms + "\\" + FullCmsFileName);
 
-                if ((operator) == '9' || (operator) == '7' || (operator) == '8') {
-                    for (int j = 0; j < Integer.parseInt(NumberOfFilesNullItemURI); j++) {
-                        String CmsFile_Name = CmsFileNames();
-                        String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
-                        if ((operator) == '7') {
-                            file = new File(dirCms + "\\" + FullCmsFileName);
+                            } else {
+                                file = new File(createCmsFilePath() + "\\" + FullCmsFileName);
 
-                        } else {
-                            file = new File(createCmsFilePath() + "\\" + FullCmsFileName);
-                        }
-
-                        writeCmsFile();
-                        fullOutputFileName();
-                        if ((operator) == '7') {
-                            OutputDestFile = new File(dirOutput + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
-
-                        } else {
-                            OutputDestFile = new File(createOutputFilePath() + "\\" + CmsFile_Name);
-
-                        }
-                        OutputDestFile.createNewFile();
-
-                    }
-                }
-
-
-                if ((operator) == '6' || (operator) == '7' || (operator) == '8') {
-                    for (int j = 0; j < Integer.parseInt(NumberOfMissingOutputFiles); j++) {
-                        String CmsFile_Name = CmsFileNames();
-                        String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
-                        if ((operator) == '7') {
-                            file = new File(dirCms + "\\" + FullCmsFileName);
-
-                        } else {
-                            file = new File(createCmsFilePath() + "\\" + FullCmsFileName);
-
-                        }
-                        writeCmsFile();
-                        block2:
-                        {
-                            fullOutputFileName();
-                            if (j >= 5 && j <= 7) {
-                                break block2;
                             }
+                            writeCmsFile();
+
+                                fullOutputFileName();
+
+                                if ((operator) == '7') {
+                                    if (j % 2 == 1) {
+                                        OutputDestFile = new File(dirOutput + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
+                                    } else {
+                                        break;
+                                    }
+
+                                } else
+                                if (j % 2 == 1) {
+                                    OutputDestFile = new File(createOutputFilePath() + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
+                                } else {
+                                    break;
+                                }
+                                OutputDestFile.createNewFile();
+                                FileUtils.copyFile(random_OutputFile, OutputDestFile);
+                            }
+
+                    }
+                }
+                if (directory.contains("batch7")) {
+                    if ((operator) == '9' || (operator) == '7' || (operator) == '8') {
+                        for (int j = 0; j < Integer.parseInt(NumberOfFilesNullItemURI); j++) {
+                            String CmsFile_Name = CmsFileNames();
+                            String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
+                            if ((operator) == '7') {
+                                file = new File(dirCms + "\\" + FullCmsFileName);
+
+                        } else {
+                            file = new File(createCmsFilePath() + "\\" + FullCmsFileName);
                         }
+
+                        writeCmsFile();
+                        fullOutputFileName();
                         if ((operator) == '7') {
                             OutputDestFile = new File(dirOutput + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
 
                         } else {
-                            OutputDestFile = new File(createOutputFilePath() + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
+                            OutputDestFile = new File(createOutputFilePath() + "\\" + CmsFile_Name);
+
                         }
                         OutputDestFile.createNewFile();
-                        FileUtils.copyFile(random_OutputFile, OutputDestFile);
+
+                        }
+                    }
+                }
+
+                if (directory.contains("batch10") || directory.contains("batch11") || directory.contains("batch12") || directory.contains("batch13") ) {
+                    if ((operator) == 'A' || (operator) == 'B' || (operator) == 'C' || (operator) == 'D'   || (operator) == '7' || (operator) == '8') {
+                        for (int j = 0; j < Integer.parseInt(NumberOfRandomFiles); j++) {
+                            String CmsFile_Name = cmsComponentFileNamesForImage();
+                            String FullCmsFileName = CmsFile_Name + getExtensionForCmsFile();
+                            if ((operator) == '7')
+
+                            {
+                                file = new File(dirCms + "\\" + FullCmsFileName);
+
+                        } else {
+                            file = new File(createCmsFilePath() + "\\" + FullCmsFileName);
+
+                            }
+
+                            writeCmsFile();
+                            fullOutputFileNameForImage();
+                            if ((operator) == '7') {
+                                OutputDestFile = new File(dirOutput + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
+
+                            } else {
+                                OutputDestFile = new File(createOutputFilePath() + "\\" + CmsFile_Name + getExtensionForOutputFile(OutputSourceFile));
+
+                            }
+
+
+                            OutputDestFile.createNewFile();
+                            FileUtils.copyFile(random_OutputFile, OutputDestFile);
+
+                        }
                     }
                 }
             }
@@ -539,6 +614,7 @@ public class TemplateJsonWriter implements StatisticFiles {
                     }
                 }
                 case '4': {
+                    if ((operator) == '4')
                     if (i % 2 == 1) {
                         file = new File(createCmsFilePath() + "\\" + Cms_File_Name);
 
@@ -585,7 +661,35 @@ public class TemplateJsonWriter implements StatisticFiles {
 
     private static File getRandomOutputSourceFile() {
         Random rand = new Random();
-        File[] files = new File(OutputSrcFile).listFiles();
+        File[] files;
+        if( (operator) == '0'){
+             files = new File(PageMultimediaOutputSrcFile).listFiles();
+        }
+        else if((operator) == 'A'){
+             files = new File(MultimediaOutputSrcFile).listFiles();
+        }
+        else if((operator) == 'B'){
+             files = new File(ImageOutputSrcFile).listFiles();
+        }
+        else if((operator) == 'C'){
+             files = new File(PdfOutputSrcFile).listFiles();
+        }
+        else if((operator) == 'D'){
+             files = new File(AudioOutputSrcFile).listFiles();
+        }
+        else if((operator) == 'E'){
+             files = new File(VideoOutputSrcFile).listFiles();
+        }
+        else {
+             files = new File(OutputSrcFile).listFiles();
+        }
+        File file = files[rand.nextInt(files.length)];
+        return file;
+    }
+
+    private static File getRandomOutputSourceFileForImage() {
+        Random rand = new Random();
+        File[] files = new File(ImageOutputSrcFile).listFiles();
         File file = files[rand.nextInt(files.length)];
         return file;
     }
@@ -672,7 +776,7 @@ public class TemplateJsonWriter implements StatisticFiles {
 
     private static String getCmsFileName() throws IOException, java.text.ParseException, ParseException, JSONException {
 
-        if ((operator) == '1' || (operator) == '5' || (operator) == '6') {
+        if ((operator) == '1' || (operator) == '5' || (operator) == '6' ||  (operator) == '0') {
             FileNameCms = cmsFileName();
 
         }
@@ -698,6 +802,26 @@ public class TemplateJsonWriter implements StatisticFiles {
         }
         if ((operator) == '9') {
             FileNameCms = cmsFileName();
+
+        }
+        if ((operator) == 'A') {
+            FileNameCms = componentCmsFileName();
+
+        }
+        if ((operator) == 'B') {
+            FileNameCms = componentCmsFileName();
+
+        }
+        if ((operator) == 'C') {
+            FileNameCms = componentCmsFileName();
+
+        }
+        if ((operator) == 'D') {
+            FileNameCms = componentCmsFileName();
+
+        }
+        if ((operator) == 'E') {
+            FileNameCms = componentCmsFileName();
 
         }
 
@@ -731,6 +855,24 @@ public class TemplateJsonWriter implements StatisticFiles {
             case '8':
                 getCmsFileName();
             case '9':
+                getCmsFileName();
+                break;
+            case '0':
+                getCmsFileName();
+                break;
+            case 'A':
+                getCmsFileName();
+                break;
+            case 'B':
+                getCmsFileName();
+                break;
+            case 'C':
+                getCmsFileName();
+                break;
+            case 'D':
+                getCmsFileName();
+                break;
+            case 'E':
                 getCmsFileName();
                 break;
             default:
@@ -787,13 +929,13 @@ public class TemplateJsonWriter implements StatisticFiles {
             three = Integer.toString(randomNumber);
         }
         {
-            int minRange = 100000, maxRange = 999999;
+            int minRange = 1000, maxRange = 9999;
             int fournumber = objGenerator.nextInt(maxRange - minRange) + minRange;
             four = Integer.toString(fournumber);
         }
 
         {
-            int minRange = 1000, maxRange = 9999;
+            int minRange = 100000, maxRange = 999999;
             int sequencenumber = objGenerator.nextInt(maxRange - minRange) + minRange;
 
             sequence = Integer.toString(sequencenumber);
@@ -908,6 +1050,214 @@ public class TemplateJsonWriter implements StatisticFiles {
             System.out.println("File not found: " + publishName.toString());
         } catch (IOException e) {
             System.out.println("Unable to read file: " + publishName.toString());
+        }
+
+        return "Exit";
+
+    }
+
+
+    public static File readFileForMultiMedia() {
+        Random rand = new Random();
+        File[] files = new File("./MultiMediaFiles").listFiles();
+        file = files[rand.nextInt(files.length)];
+        return file;
+    }
+
+    public static String createAllFiles() throws IOException, ParseException {
+        int totalLines = 0;
+     File cmsname =   readFileForMultiMedia();
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader((cmsname)));
+
+            while ((br.readLine()) != null) {
+                totalLines++;
+            }
+            br.close();
+            br = new BufferedReader(new FileReader((cmsname)));
+            Random random = new Random();
+            int randomInt = random.nextInt(totalLines);
+            int count = 0;
+            String Cmsname;
+            while ((Cmsname = br.readLine()) != null) {
+                if (count == randomInt) {
+                    br.close();
+
+                    return Cmsname;
+
+                }
+                count++;
+
+            }
+            br.close();
+
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + cmsname);
+        } catch (IOException e) {
+            System.out.println("Unable to read file: " + cmsname);
+        }
+
+        return "Exit";
+
+    }
+
+
+
+    public static String createVideosComponentFiles() throws IOException, ParseException {
+        int totalLines = 0;
+        File cmsname = new File("./MultimediaFiles/Videos.txt");
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(cmsname));
+
+            while ((br.readLine()) != null) {
+                totalLines++;
+            }
+            br.close();
+            br = new BufferedReader(new FileReader(cmsname));
+            Random random = new Random();
+            int randomInt = random.nextInt(totalLines);
+            int count = 0;
+            String Cmsname;
+            while ((Cmsname = br.readLine()) != null) {
+                if (count == randomInt) {
+                    br.close();
+
+                    return Cmsname;
+
+                }
+                count++;
+
+            }
+            br.close();
+
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + cmsname.toString());
+        } catch (IOException e) {
+            System.out.println("Unable to read file: " + cmsname.toString());
+        }
+
+        return "Exit";
+
+    }
+
+    public static String createPdfComponentFiles() throws IOException, ParseException {
+        int totalLines = 0;
+        File cmsname = new File("./MultimediaFiles/pdf.txt");
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(cmsname));
+
+            while ((br.readLine()) != null) {
+                totalLines++;
+            }
+            br.close();
+            br = new BufferedReader(new FileReader(cmsname));
+            Random random = new Random();
+            int randomInt = random.nextInt(totalLines);
+            int count = 0;
+            String Cmsname;
+            while ((Cmsname = br.readLine()) != null) {
+                if (count == randomInt) {
+                    br.close();
+
+                    return Cmsname;
+
+                }
+                count++;
+
+            }
+            br.close();
+
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + cmsname.toString());
+        } catch (IOException e) {
+            System.out.println("Unable to read file: " + cmsname.toString());
+        }
+
+        return "Exit";
+
+    }
+
+
+    public static String createAudioComponentFiles() throws IOException, ParseException {
+        int totalLines = 0;
+        File cmsname = new File("./MultimediaFiles/Audio.txt");
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(cmsname));
+
+            while ((br.readLine()) != null) {
+                totalLines++;
+            }
+            br.close();
+            br = new BufferedReader(new FileReader(cmsname));
+            Random random = new Random();
+            int randomInt = random.nextInt(totalLines);
+            int count = 0;
+            String Cmsname;
+            while ((Cmsname = br.readLine()) != null) {
+                if (count == randomInt) {
+                    br.close();
+
+                    return Cmsname;
+
+                }
+                count++;
+
+            }
+            br.close();
+
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + cmsname.toString());
+        } catch (IOException e) {
+            System.out.println("Unable to read file: " + cmsname.toString());
+        }
+
+        return "Exit";
+
+    }
+
+    public static String createImageComponentFiles() throws IOException, ParseException {
+        int totalLines = 0;
+        File cmsname = new File("./MultimediaFiles/Image.txt");
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(cmsname));
+
+            while ((br.readLine()) != null) {
+                totalLines++;
+            }
+            br.close();
+            br = new BufferedReader(new FileReader(cmsname));
+            Random random = new Random();
+            int randomInt = random.nextInt(totalLines);
+            int count = 0;
+            String Cmsname;
+            while ((Cmsname = br.readLine()) != null) {
+                if (count == randomInt) {
+                    br.close();
+
+                    return Cmsname;
+
+                }
+                count++;
+
+            }
+            br.close();
+
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + cmsname.toString());
+        } catch (IOException e) {
+            System.out.println("Unable to read file: " + cmsname.toString());
         }
 
         return "Exit";
@@ -1040,8 +1390,25 @@ public class TemplateJsonWriter implements StatisticFiles {
                 result = "Batch8";
                 break;
             case '9':
-
                 result = "Batch9";
+                break;
+            case '0':
+                result = "Batch10";
+                break;
+            case 'A':
+                result = "Batch10";
+                break;
+            case 'B':
+                result = "Batch11";
+                break;
+            case 'C':
+                result = "Batch12";
+                break;
+            case 'D':
+                result = "Batch13";
+                break;
+            case 'E':
+                result = "Batch14";
                 break;
             default:
                 System.out.println("Invalid operator!");
@@ -1100,6 +1467,25 @@ public class TemplateJsonWriter implements StatisticFiles {
             case '9':
                 result = "W/OItemUri";
                 break;
+            case '0':
+                result = "MultimediaAllFile";
+                break;
+            case 'A':
+                result = "MultimediaAllFile";
+                break;
+            case 'B':
+                result = "ImageFiles";
+                break;
+            case 'C':
+                result = "PdfFiles";
+                break;
+            case 'D':
+                result = "AudioFiles";
+                break;
+            case 'E':
+                result = "VideoFiles";
+                break;
+
             default:
                 System.out.println("Invalid operator!");
                 break;
@@ -1116,7 +1502,7 @@ public class TemplateJsonWriter implements StatisticFiles {
 
         return dir;
     }
-    public static File createCmsFilePath_ForBatch7() throws IOException, ParseException, java.text.ParseException, JSONException {
+    public static File createCmsFilePath_ForBatch3() throws IOException, ParseException, java.text.ParseException, JSONException {
 
         dir = new File(batchPath + getBatch()+ "\\"  + getBatchName() );
         if (!dir.exists()) {
