@@ -25,6 +25,8 @@ public class ConfigurationProperty {
 
     private String SourceFilePath = "C:\\trycms\\Batch1\\CMS_files";
     private String OutputSourceFilepath = "C:\\trycms\\Batch1\\Output_files";
+    private String SourceFilePathForImage = "C:\\cms_data\\CmsImageData\\CMS_files";
+    private String OutputSourceFilepathForImage = "C:\\cms_data\\CmsImageData\\Output_files";
     private String CreateFilesFromDate = "2019-01-20T10:31:43";
     private String CreateFilesFromDatess = "2020-01-20T10:31:43";
     private int NoOfComponentCreate = 10 ;

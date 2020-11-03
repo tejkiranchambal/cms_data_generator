@@ -16,7 +16,7 @@ import java.util.Scanner;
 class mainClass {
     public static void createFile() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Which function do you wish you use?" +
+        System.out.println("Which function do you wish you use?\n" +
                 "Enter 1 for create randomfiles\n" +
                 "Enter 2 for create sequencefile \n" +
                 "Enter 3 for create OverrideFiles \n" +

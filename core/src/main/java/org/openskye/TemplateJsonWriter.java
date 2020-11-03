@@ -659,6 +659,12 @@ public class TemplateJsonWriter implements StatisticFiles {
 
     }
 
+    public static void fullOutputFileNameForImage() throws IOException, java.text.ParseException {
+        random_OutputFile = getRandomOutputSourceFileForImage();
+        OutputSourceFile = new File(OutputSrcFile + random_OutputFile);
+
+    }
+
     private static File getRandomOutputSourceFile() {
         Random rand = new Random();
         File[] files;
@@ -733,7 +739,7 @@ public class TemplateJsonWriter implements StatisticFiles {
         String tcm = array[0];
         String three = array[1];
         String four = array[2];
-        String page = array[3];
+         page = array[3];
         String date = array[4];
         String sequence = array[5];
         int b = Integer.parseInt(four);
@@ -916,7 +922,7 @@ public class TemplateJsonWriter implements StatisticFiles {
         String tcm = array[0];
         String three = array[1];
         String four = array[2];
-        String page = array[3];
+         page = array[3];
         String date = array[4];
         String sequence = array[5];
         int b = Integer.parseInt(four);
@@ -964,7 +970,7 @@ public class TemplateJsonWriter implements StatisticFiles {
         String tcm = array[0];
         String three = array[1];
         String four = array[2];
-        String page = array[3];
+         page = array[3];
         String date = array[4];
         int sequence = Integer.parseInt(array[5]);
         int b = Integer.parseInt(four);
@@ -1465,7 +1471,7 @@ public class TemplateJsonWriter implements StatisticFiles {
                 result = "AllBatchesInOneFile";
                 break;
             case '9':
-                result = "W/OItemUri";
+                result = "WithoutItemUri";
                 break;
             case '0':
                 result = "MultimediaAllFile";

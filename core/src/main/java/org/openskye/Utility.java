@@ -87,11 +87,13 @@ class Utility {
 
 
 
-    public static String cmsOriginalFileName() throws java.text.ParseException, IOException {
+    public static String cmsOriginalFileName() throws java.text.ParseException, IOException, ParseException, JSONException {
         File sf = templateJsonReader.getSOURCE_JSON_FILE();
         String str = sf.getName();
-
-        return str;
+        String array[] = str.split("[- _.]+");
+        page = array[3];
+        FileNameCms = ( array[0] + "-" + array[1] + "-" + array[2] + "-" + page + "_"+ callDateMethod(DateOperator) + "_" +  array[5] + "." + array[6]);
+        return FileNameCms;
     }
 
 

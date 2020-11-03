@@ -66,7 +66,10 @@ public class TemplateJsonReader {
             TCMID = setJSONFileName(DESTINATION_JSON_FILE.getName()) + "-" + page + "-" + "v" + CmsVersion;
             multimediaJsonObject.put("Id", TCMID);
         }*/
-        TCMID = setitemUri(DESTINATION_JSON_FILE.getName());
+
+
+            TCMID = setitemUri(DESTINATION_JSON_FILE.getName());
+
 
         setitemUriNull = setitemUriNull((DESTINATION_JSON_FILE.getName()));
         if (page.equalsIgnoreCase(String.valueOf(64))) {
@@ -84,6 +87,7 @@ public class TemplateJsonReader {
         if (page.equalsIgnoreCase(String.valueOf(64))) {
             multimediaJsonObject.put("FileName", CmsGetName);
         }
+
 
         JSONObject innerJsonObject = multimediaJsonObject.getJSONObject("SystemMetadata");
         SystemMetadata SystemMetadatas = new SystemMetadata();
@@ -110,7 +114,7 @@ public class TemplateJsonReader {
                 innerJsonObject.put("ItemUri", getItemUriForComponentFile());
 
             }
-              else if ((operator) == '9' || directory.contains("batch7")) {
+              else if ((operator) == '9' || (operator) == '7' && directory.contains("batch7")) {
                 innerJsonObject.remove("ItemUri");
             }
 
@@ -169,6 +173,7 @@ public class TemplateJsonReader {
             try {
 
                 if (multimediaJsonObject.getJSONArray(componentType) != null) {
+
                     JSONArray componentJsonArray = multimediaJsonObject.getJSONArray(componentType);
                     ComponentPresentations cp = new ComponentPresentations();
                     ArrayList<String> list = new ArrayList<String>();
@@ -243,12 +248,20 @@ public class TemplateJsonReader {
                         componentJsonObject.put("Component", compoJson);
 
 
-                        if (i == Integer.parseInt(NoOfComponentCreate)) {
+//                            if (i == Integer.parseInt(NoOfComponentCreate)) {
+//                                cmpJsonArry.put(componentJsonObject);
+//
+//                            } else {
+//                                componentJsonObject.remove("Component");
+//                                componentJsonObject.remove("ComponentTemplate");
+//
+//
+//                            }
                             cmpJsonArry.put(componentJsonObject);
                             cp.getJsonArray().add(cmpJsonArry);
                          //   NewJsonArray = cmpJsonArry;
                         }
-                        cp.getJsonArray().add(cmpJsonArry);
+
                     }
                 }
 
